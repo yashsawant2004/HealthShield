@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthShield — Smart Insurance Recommender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-icon">🛡️</div>
+      <div>
+        <div class="brand-name">HealthShield</div>
+        <div class="brand-tag">Smart Insurance Recommender</div>
+      </div>
+    </div>
+    <nav class="top-nav">
+      <a class="nav-link active" data-page="home" onclick="navigate('home')">🏠 Home</a>
+      <a class="nav-link" data-page="recommender" onclick="navigate('recommender')">🔍 Find Policy</a>
+      <a class="nav-link" data-page="services" onclick="navigate('services')">⚙️ Services</a>
+      <a class="nav-link" data-page="support" onclick="navigate('support')">💬 Support</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== PAGE: HOME ===== -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Find the Perfect Health Policy</h2>
+      <p>Compare 100+ plans from 20+ leading insurers. Get personalised recommendations in seconds.</p>
+      <button class="hero-cta" onclick="navigate('recommender')">Get My Recommendations →</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box"><div class="stat-num" id="stat-policies">101</div><div class="stat-label">Policies</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-companies">21</div><div class="stat-label">Insurers</div></div>
+      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Unbiased</div></div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-header">
+      <h3>Policies by Insurer</h3>
+      <p>Explore our full catalog — click any company to view their plans</p>
+    </div>
+    <div id="company-grid" class="company-grid">
+      <div class="skeleton-card"></div><div class="skeleton-card"></div>
+      <div class="skeleton-card"></div><div class="skeleton-card"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== PAGE: RECOMMENDER ===== -->
+<div id="page-recommender" class="page">
+  <main class="layout">
+    <section class="form-panel">
+      <div class="form-title">
+        <span class="form-icon">🎯</span>
+        <div>
+          <div class="form-heading">Your Profile</div>
+          <div class="form-subheading">Results update live as you fill in details</div>
+        </div>
+      </div>
+      <form id="profile-form">
+
+        <fieldset>
+          <legend>👤 Personal Info</legend>
+          <div class="two-col">
+            <label>Age
+              <input type="number" id="age" min="0" max="100" value="30">
+            </label>
+            <label>Gender
+              <select id="gender">
+                <option value="">Prefer not to say</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+          </div>
+          <div class="two-col">
+            <label>Marital Status
+              <select id="marital_status">
+                <option value="">Select</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+              </select>
+            </label>
+            <label>Occupation
+              <select id="occupation">
+                <option value="">Select</option>
+                <option value="salaried">Salaried</option>
+                <option value="self_employed">Self-employed</option>
+                <option value="homemaker">Homemaker</option>
+                <option value="student">Student</option>
+                <option value="retired">Retired</option>
+              </select>
+            </label>
+          </div>
+          <label>City Tier
+            <select id="city_tier">
+              <option value="1">Tier 1 — Metro city</option>
+              <option value="2">Tier 2 city</option>
+              <option value="3">Tier 3 city</option>
+            </select>
+          </label>
+          <label class="toggle-row">
+            <input type="checkbox" id="family_floater" class="toggle-cb">
+            <span class="toggle-label">Need cover for whole family (floater)</span>
+          </label>
+          <label id="family-size-wrap" class="hidden">Family Size (members)
+            <input type="number" id="family_size" min="1" max="10" value="2">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>🏥 Health Info</legend>
+          <div class="two-col">
+            <label>Height (cm)
+              <input type="number" id="height_cm" min="50" max="250" placeholder="e.g. 170">
+            </label>
+            <label>Weight (kg)
+              <input type="number" id="weight_kg" min="20" max="250" placeholder="e.g. 70">
+            </label>
+          </div>
+          <div class="bmi-bar">
+            <span>BMI: <strong id="bmi-val">—</strong></span>
+            <span id="bmi-label" class="bmi-label"></span>
+          </div>
+          <div class="toggle-group">
+            <label class="toggle-row"><input type="checkbox" id="pre_existing_disease" class="toggle-cb"><span class="toggle-label">I have a pre-existing disease</span></label>
+            <label class="toggle-row"><input type="checkbox" id="smoker" class="toggle-cb"><span class="toggle-label">I smoke / use tobacco</span></label>
+            <label class="toggle-row"><input type="checkbox" id="alcohol" class="toggle-cb"><span class="toggle-label">I consume alcohol regularly</span></label>
+          </div>
+          <div class="sublabel">Existing conditions (select all that apply)</div>
+          <div class="chip-grid" id="conditions-grid">
+            <label class="chip"><input type="checkbox" value="diabetes">🩸 Diabetes</label>
+            <label class="chip"><input type="checkbox" value="hypertension">💊 Hypertension</label>
+            <label class="chip"><input type="checkbox" value="heart">❤️ Heart Disease</label>
+            <label class="chip"><input type="checkbox" value="thyroid">🦋 Thyroid</label>
+            <label class="chip"><input type="checkbox" value="asthma">🫁 Asthma</label>
+            <label class="chip"><input type="checkbox" value="kidney">🫘 Kidney Disease</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>📋 Coverage Needs</legend>
+          <label>Sum Insured Needed
+            <div class="range-row">
+              <input type="range" id="sum_insured" min="100000" max="20000000" step="100000" value="500000">
+              <span class="range-val" id="si-val">₹5,00,000</span>
+            </div>
+          </label>
+          <label>Annual Budget (optional)
+            <div class="range-row">
+              <input type="range" id="budget" min="0" max="100000" step="500" value="0">
+              <span class="range-val" id="budget-val">No limit</span>
+            </div>
+          </label>
+          <div class="two-col">
+            <label>Room Preference
+              <select id="room_rent_preference">
+                <option value="">No preference</option>
+                <option value="shared">Shared Room</option>
+                <option value="single_ac">Single Private AC</option>
+                <option value="any">Any Room (no cap)</option>
+              </select>
+            </label>
+            <label>Premium Frequency
+              <select id="premium_frequency_preference">
+                <option value="">No preference</option>
+                <option value="annual">Annual</option>
+                <option value="half_yearly">Half-Yearly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>🔄 Renewal Info</legend>
+          <label class="toggle-row">
+            <input type="checkbox" id="is_renewal" class="toggle-cb">
+            <span class="toggle-label">I already hold a health policy</span>
+          </label>
+          <div id="renewal-wrap" class="hidden renewal-block">
+            <div class="two-col">
+              <label>Current Insurer
+                <input type="text" id="current_insurer" placeholder="e.g. HDFC Ergo">
+              </label>
+              <label>Current SI (₹)
+                <input type="number" id="current_sum_insured" min="0" step="50000" placeholder="e.g. 500000">
+              </label>
+            </div>
+            <p class="hint-box">💡 Switch to the <b>Top-Up for Renewal</b> tab to see affordable top-up plans.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>✅ What Matters to You?</legend>
+          <div class="chip-grid" id="requirements-grid">
+            <label class="chip"><input type="checkbox" value="maternity">🤰 Maternity</label>
+            <label class="chip"><input type="checkbox" value="opd">🏥 OPD Cover</label>
+            <label class="chip"><input type="checkbox" value="critical_illness">🚨 Critical Illness</label>
+            <label class="chip"><input type="checkbox" value="accident">🦺 Accident Cover</label>
+            <label class="chip"><input type="checkbox" value="ayush">🌿 AYUSH / Alt.</label>
+            <label class="chip"><input type="checkbox" value="mental_health">🧠 Mental Health</label>
+            <label class="chip"><input type="checkbox" value="international">✈️ International</label>
+            <label class="chip"><input type="checkbox" value="annual_checkup">🔬 Annual Checkup</label>
+            <label class="chip"><input type="checkbox" value="chronic_care">💉 Chronic Care</label>
+            <label class="chip"><input type="checkbox" value="no_claim_bonus">🎁 NCB Bonus</label>
+            <label class="chip"><input type="checkbox" value="restoration_benefit">♻️ Restoration</label>
+            <label class="chip"><input type="checkbox" value="low_copay">💳 No Co-pay</label>
+          </div>
+          <div class="others-wrap">
+            <label class="toggle-row">
+              <input type="checkbox" id="others_toggle" class="toggle-cb">
+              <span class="toggle-label">Others — describe in your own words</span>
+            </label>
+            <input type="text" id="other_requirement" class="hidden others-input" placeholder="e.g. dental cover, wellness rewards, free vaccination…">
+          </div>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="results-panel">
+      <div class="res-tabs">
+        <button class="rtab active" data-tab="personalized">🎯 Personalized</button>
+        <button class="rtab" data-tab="topup">➕ Top-Up for Renewal</button>
+        <button class="rtab" data-tab="top10">🏆 Top 10 Overall</button>
+      </div>
+
+      <div id="tab-personalized" class="rtab-panel active">
+        <div class="results-header">
+          <div><h2>Top 5 Picks For You</h2><p class="results-sub">Updating live as you fill the form</p></div>
+          <span id="status" class="status-chip">Loading…</span>
+        </div>
+        <div id="results" class="results-grid"></div>
+      </div>
+
+      <div id="tab-topup" class="rtab-panel">
+        <div class="results-header">
+          <div><h2>Top-Up Plans</h2><p class="results-sub">Extra cover on top of your existing policy</p></div>
+          <span id="status-topup" class="status-chip">Loading…</span>
+        </div>
+        <div class="info-banner">💡 Top-up plans kick in after your base policy's sum insured is exhausted — giving you high cover at a low additional premium.</div>
+        <div id="results-topup" class="results-grid"></div>
+      </div>
+
+      <div id="tab-top10" class="rtab-panel">
+        <div class="results-header">
+          <div><h2>Top 10 Best-Rated Policies</h2><p class="results-sub">Across all insurers in our catalog</p></div>
+          <span id="status-top10" class="status-chip">Loading…</span>
+        </div>
+        <div id="results-top10" class="results-grid"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ===== PAGE: SERVICES ===== -->
+<div id="page-services" class="page">
+  <section class="inner-hero services-hero">
+    <h2>Our Services</h2>
+    <p>Everything you need to choose, compare, and manage your health insurance</p>
+  </section>
+  <div class="services-grid-wrap">
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">🤖</div>
+        <h4>AI-Powered Recommendations</h4>
+        <p>Answer a few questions about your age, health, and coverage needs — our engine instantly scores every policy in our catalog and surfaces your top 5 best-fit plans, ranked by how closely they match your profile.</p>
+        <ul><li>Live results as you type</li><li>100+ policies evaluated instantly</li><li>Weighted scoring across 20+ parameters</li></ul>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📊</div>
+        <h4>Policy Comparison</h4>
+        <p>View detailed side-by-side comparisons of sum insured, coverage features, waiting periods, co-pay terms, hospital network size, and insurer ratings.</p>
+        <ul><li>OPD, maternity, critical illness flags</li><li>Pre-existing disease waiting periods</li><li>Cashless hospital network size</li></ul>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📄</div>
+        <h4>Digital Brochures</h4>
+        <p>Every recommendation comes with a downloadable PDF brochure summarising the policy's key features, coverage highlights, and eligibility — so you can share it, print it, or review offline.</p>
+        <ul><li>One-click PDF download per policy</li><li>Key facts + coverage at a glance</li><li>Auto-generated from our data</li></ul>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🔄</div>
+        <h4>Renewal & Top-Up Advisory</h4>
+        <p>Already holding a policy and up for renewal? We surface the best top-up and super top-up plans that extend your cover affordably without replacing your existing policy.</p>
+        <ul><li>Dedicated Top-Up recommendations tab</li><li>Tailored to your current sum insured</li><li>Compare top-ups from multiple insurers</li></ul>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🏆</div>
+        <h4>Best-of-Catalog Rankings</h4>
+        <p>Curious what's the best-rated policy overall, irrespective of your profile? Our Top 10 tab shows the highest-rated plans across all insurers based on rating, coverage ceiling, and hospital network.</p>
+        <ul><li>Profile-independent best list</li><li>Updated from live catalog data</li><li>Ideal for research & benchmarking</li></ul>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🔒</div>
+        <h4>100% Unbiased & Free</h4>
+        <p>We are not affiliated with, nor paid by, any insurer. Our recommendations are driven purely by how well a policy matches your profile — not by commission or sponsorship.</p>
+        <ul><li>No advertisements or paid placements</li><li>No data sold to third parties</li><li>Always free to use</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-it-works">
+    <h3>How It Works</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div><b>Fill Your Profile</b><br>Age, health info, family size, and any coverage preferences</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-num">2</div><div><b>We Score Every Policy</b><br>Our engine evaluates 20+ parameters for every plan in real time</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-num">3</div><div><b>See Your Top 5</b><br>Ranked cards with match reasons and a one-click brochure PDF</div></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-num">4</div><div><b>Decide with Confidence</b><br>Download brochures, compare details, contact the insurer</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: SUPPORT ===== -->
+<div id="page-support" class="page">
+  <section class="inner-hero support-hero">
+    <h2>Support & Help</h2>
+    <p>We're here to help you navigate health insurance with confidence</p>
+  </section>
+  <div class="support-wrap">
+    <div class="support-grid">
+      <div class="contact-card primary-contact">
+        <div class="cc-icon">📞</div>
+        <h4>Call Us</h4>
+        <div class="cc-value"><a href="tel:+911800123456">1800-123-4567</a></div>
+        <p>Toll-free · Mon–Sat · 9 AM – 7 PM</p>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">📧</div>
+        <h4>Email Us</h4>
+        <div class="cc-value"><a href="mailto:support@healthshield.in">support@healthshield.in</a></div>
+        <p>We respond within 24 business hours</p>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">💬</div>
+        <h4>Live Chat</h4>
+        <div class="cc-value">Available on site</div>
+        <p>Mon–Fri · 9 AM – 6 PM IST</p>
+      </div>
+    </div>
+
+    <div class="company-about">
+      <div class="about-text">
+        <h3>About HealthShield</h3>
+        <p>HealthShield is an independent health insurance comparison and advisory platform founded with one mission: to make it simple for every Indian family to find the right health cover — without confusion, hidden commissions, or insurer bias.</p>
+        <p>We aggregate policy data from 20+ IRDAI-registered insurers, apply a transparent scoring algorithm, and surface the policies that genuinely match your health profile, family situation, and budget. We are not an insurance company; we are your navigator.</p>
+        <div class="about-badges">
+          <span class="badge">🏛️ IRDAI Compliant</span>
+          <span class="badge">🔒 Data Secure</span>
+          <span class="badge">✅ Unbiased Ratings</span>
+          <span class="badge">📋 101+ Policies</span>
+        </div>
+      </div>
+      <div class="office-info">
+        <h4>📍 Our Office</h4>
+        <p>HealthShield Technologies Pvt. Ltd.<br>
+        4th Floor, Tower B, Infinity Park,<br>
+        Malad East, Mumbai — 400 097<br>
+        Maharashtra, India</p>
+        <h4 style="margin-top:18px">⏰ Working Hours</h4>
+        <p>Monday – Saturday: 9:00 AM – 7:00 PM IST<br>Sunday: Closed</p>
+        <h4 style="margin-top:18px">🆘 Grievance Officer</h4>
+        <p>Mr. Rajesh Sharma<br>
+        <a href="mailto:grievance@healthshield.in">grievance@healthshield.in</a><br>
+        +91 98765 43210</p>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h3>Frequently Asked Questions</h3>
+      <div class="faq-grid">
+        <div class="faq-item"><div class="faq-q">Is this service free?</div><div class="faq-a">Yes, completely free. We earn no commissions from any insurer for showing you their policies.</div></div>
+        <div class="faq-item"><div class="faq-q">Are the recommendations unbiased?</div><div class="faq-a">Fully. Our scoring algorithm is rule-based and driven purely by your profile vs policy features — no paid placements.</div></div>
+        <div class="faq-item"><div class="faq-q">Can I buy a policy here?</div><div class="faq-a">Not yet — we are a comparison tool. Download the policy brochure and contact the insurer directly to purchase.</div></div>
+        <div class="faq-item"><div class="faq-q">How current is the policy data?</div><div class="faq-a">We refresh the catalog regularly. Always verify terms with the insurer's official prospectus before purchasing.</div></div>
+        <div class="faq-item"><div class="faq-q">Is my personal data stored?</div><div class="faq-a">No personal data is stored or shared. Your profile inputs are only used in-session for recommendations.</div></div>
+        <div class="faq-item"><div class="faq-q">What is a top-up policy?</div><div class="faq-a">A top-up policy activates after your base policy's sum insured is exhausted, providing additional cover at a lower premium than enhancing the base policy.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for company policy listing -->
+<div id="company-modal" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('company-modal').classList.add('hidden')">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
