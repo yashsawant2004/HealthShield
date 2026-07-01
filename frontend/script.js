@@ -1,4 +1,4 @@
-const API_BASE = "";
+const API_BASE = "https://health-insurance-api-2yp5.onrender.com";
 
 // ── Navigation ─────────────────────────────────────────────────────────────
 function navigate(page) {
@@ -12,10 +12,10 @@ function navigate(page) {
 
 // ── Company colors (stripe + pill) ─────────────────────────────────────────
 const COMPANY_COLORS = [
-  "#1a56db","#10b981","#f59e0b","#ef4444","#8b5cf6",
-  "#0ea5e9","#ec4899","#14b8a6","#f97316","#6366f1",
-  "#84cc16","#06b6d4","#a855f7","#e11d48","#059669",
-  "#d97706","#2563eb","#dc2626","#7c3aed","#0891b2","#16a34a"
+  "#1a56db", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6",
+  "#0ea5e9", "#ec4899", "#14b8a6", "#f97316", "#6366f1",
+  "#84cc16", "#06b6d4", "#a855f7", "#e11d48", "#059669",
+  "#d97706", "#2563eb", "#dc2626", "#7c3aed", "#0891b2", "#16a34a"
 ];
 function companyColor(name) {
   let h = 0; for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
@@ -49,7 +49,7 @@ function renderCompanyGrid(companies) {
     const color = companyColor(company);
     const avgRating = (policies.reduce((s, p) => s + (p.rating || 3.5), 0) / policies.length).toFixed(1);
     const hasFloater = policies.some(p => p.is_family_floater);
-    const hasTopup   = policies.some(p => p.is_top_up);
+    const hasTopup = policies.some(p => p.is_top_up);
     const hasMaternity = policies.some(p => p.maternity_cover === "yes");
     const card = document.createElement("div");
     card.className = "company-card";
@@ -59,9 +59,9 @@ function renderCompanyGrid(companies) {
         <div class="cc-name">${company}</div>
         <div class="cc-count">${policies.length} plan${policies.length > 1 ? "s" : ""} available</div>
         <div class="cc-pills">
-          ${hasFloater  ? '<span class="cc-pill">👨‍👩‍👧 Floater</span>' : ""}
-          ${hasTopup    ? '<span class="cc-pill orange">🔼 Top-Up</span>' : ""}
-          ${hasMaternity? '<span class="cc-pill green">🤰 Maternity</span>' : ""}
+          ${hasFloater ? '<span class="cc-pill">👨‍👩‍👧 Floater</span>' : ""}
+          ${hasTopup ? '<span class="cc-pill orange">🔼 Top-Up</span>' : ""}
+          ${hasMaternity ? '<span class="cc-pill green">🤰 Maternity</span>' : ""}
         </div>
         <div class="cc-rating">${stars(avgRating)} ${avgRating}</div>
         <div class="cc-view">View all plans →</div>
@@ -105,10 +105,10 @@ function computeBMI() {
   if (!h || !w) { bmiVal.textContent = "—"; bmiLabel.textContent = ""; return null; }
   const bmi = w / ((h / 100) ** 2);
   bmiVal.textContent = bmi.toFixed(1);
-  if      (bmi < 18.5) { bmiLabel.textContent = "Underweight"; bmiLabel.style.cssText = "background:#fef3c7;color:#92400e"; }
-  else if (bmi < 25)   { bmiLabel.textContent = "Normal";       bmiLabel.style.cssText = "background:#dcfce7;color:#166534"; }
-  else if (bmi < 30)   { bmiLabel.textContent = "Overweight";   bmiLabel.style.cssText = "background:#fff7ed;color:#9a3412"; }
-  else                 { bmiLabel.textContent = "Obese";         bmiLabel.style.cssText = "background:#fee2e2;color:#991b1b"; }
+  if (bmi < 18.5) { bmiLabel.textContent = "Underweight"; bmiLabel.style.cssText = "background:#fef3c7;color:#92400e"; }
+  else if (bmi < 25) { bmiLabel.textContent = "Normal"; bmiLabel.style.cssText = "background:#dcfce7;color:#166534"; }
+  else if (bmi < 30) { bmiLabel.textContent = "Overweight"; bmiLabel.style.cssText = "background:#fff7ed;color:#9a3412"; }
+  else { bmiLabel.textContent = "Obese"; bmiLabel.style.cssText = "background:#fee2e2;color:#991b1b"; }
   return bmi;
 }
 
@@ -118,27 +118,27 @@ function readProfile() {
   const requirements = [...document.querySelectorAll("#requirements-grid input:checked")].map(c => c.value);
   const existing_conditions = [...document.querySelectorAll("#conditions-grid input:checked")].map(c => c.value);
   return {
-    age:                    Number(g("age").value),
-    gender:                 g("gender").value,
-    marital_status:         g("marital_status").value,
-    occupation:             g("occupation").value,
-    city_tier:              g("city_tier").value,
-    family_floater:         g("family_floater").checked,
-    family_size:            Number(g("family_size").value),
-    bmi:                    computeBMI(),
-    pre_existing_disease:   g("pre_existing_disease").checked,
+    age: Number(g("age").value),
+    gender: g("gender").value,
+    marital_status: g("marital_status").value,
+    occupation: g("occupation").value,
+    city_tier: g("city_tier").value,
+    family_floater: g("family_floater").checked,
+    family_size: Number(g("family_size").value),
+    bmi: computeBMI(),
+    pre_existing_disease: g("pre_existing_disease").checked,
     existing_conditions,
-    smoker:                 g("smoker").checked,
-    alcohol:                g("alcohol").checked,
-    sum_insured:            Number(g("sum_insured").value),
-    budget:                 Number(g("budget").value),
-    room_rent_preference:   g("room_rent_preference").value,
+    smoker: g("smoker").checked,
+    alcohol: g("alcohol").checked,
+    sum_insured: Number(g("sum_insured").value),
+    budget: Number(g("budget").value),
+    room_rent_preference: g("room_rent_preference").value,
     premium_frequency_preference: g("premium_frequency_preference").value,
-    is_renewal:             g("is_renewal").checked,
-    current_insurer:        g("current_insurer").value,
-    current_sum_insured:    Number(g("current_sum_insured").value),
+    is_renewal: g("is_renewal").checked,
+    current_insurer: g("current_insurer").value,
+    current_sum_insured: Number(g("current_sum_insured").value),
     requirements,
-    other_requirement:      g("others_toggle").checked ? g("other_requirement").value : "",
+    other_requirement: g("others_toggle").checked ? g("other_requirement").value : "",
     top_n: 5,
   };
 }
@@ -149,10 +149,10 @@ function policyCard(p, idx) {
   const reasonTags = (p.match_reasons || []).map(r => `<span class="reason-tag">${r}</span>`).join("");
 
   const meta = [
-    ["Type",        p.policy_type || "—"],
+    ["Type", p.policy_type || "—"],
     ["Sum Insured", p.sum_insured_raw || "—"],
-    ["Rating",      `<span class="stars">${stars(p.rating)}</span> ${p.rating}/5`],
-    ["Best For",    p.best_for || "—"],
+    ["Rating", `<span class="stars">${stars(p.rating)}</span> ${p.rating}/5`],
+    ["Best For", p.best_for || "—"],
   ];
 
   const card = document.createElement("div");
@@ -166,7 +166,7 @@ function policyCard(p, idx) {
     </div>
     <div class="pc-body">
       <div class="pc-meta">
-        ${meta.map(([k,v]) => `<span class="pc-meta-key">${k}</span><span class="pc-meta-val">${v}</span>`).join("")}
+        ${meta.map(([k, v]) => `<span class="pc-meta-key">${k}</span><span class="pc-meta-val">${v}</span>`).join("")}
       </div>
       ${reasonTags ? `<div class="pc-reasons">${reasonTags}</div>` : ""}
       <a class="brochure-btn" href="${API_BASE}/api/brochure/${p.id}" target="_blank" rel="noopener">
@@ -190,7 +190,7 @@ async function fetchPersonalized(profile) {
   const status = document.getElementById("status");
   status.textContent = "Updating…";
   try {
-    const r = await fetch(`${API_BASE}/api/recommend`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(profile) });
+    const r = await fetch(`${API_BASE}/api/recommend`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(profile) });
     const d = await r.json();
     renderInto(document.getElementById("results"), d.recommendations, "No matching policies found. Try relaxing your filters.");
     status.textContent = `${d.count} matches · just now`;
@@ -201,7 +201,7 @@ async function fetchTopup(profile) {
   const status = document.getElementById("status-topup");
   status.textContent = "Updating…";
   try {
-    const r = await fetch(`${API_BASE}/api/topup`, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(profile) });
+    const r = await fetch(`${API_BASE}/api/topup`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(profile) });
     const d = await r.json();
     renderInto(document.getElementById("results-topup"), d.recommendations, "No top-up plans found. Try adjusting your sum insured.");
     status.textContent = `${d.count} top-up plans`;
